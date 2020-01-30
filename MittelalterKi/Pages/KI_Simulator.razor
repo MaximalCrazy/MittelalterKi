@@ -1,0 +1,139 @@
+﻿@page "/KI_Simulator"
+@using System.Threading
+
+<h1>Simulation Dorfbewohner</h1>
+<p>Aktuelle Geschwindigkeit: @geschwindigkeitSimulation</p>
+<br />
+<br />
+
+<p>Aktuelle Lebenspunkte: @Lebenspunkte</p>
+@*<button class="btn btn-primary" @onclick="setzeLebenspunkteZurück">setzeLebenspunkteZurück</button>*@
+<br />
+
+<p>Aktuelle Ausdauer: @Ausdauer</p>
+@*<button class="btn btn-primary" @onclick="setzeAusdauerpunkteZurück">setzeAusdauerpunkteZurück</button>*@
+<br />
+
+<p>Aktuelles Wasser: @Wasser</p>
+@*<button class="btn btn-primary" @onclick="setzeWasserZurück">setzeWasserZurück</button>*@
+<br />
+
+<p>Aktuelle Nahrung: @Nahrung</p>
+@*<button class="btn btn-primary" @onclick="setzeNahrungZurück">setzeNahrungZurück</button>*@
+
+
+
+@*<input id="geschwindigkeit" type="number" @bind="geschwindigkeitSimulation" />*@ @*Geschwindigkeit der Simulation*@
+<br />
+
+<button class="btn btn-primary" @onclick="Simulation">Starte Simulation</button>
+
+
+@code {
+    private bool _simulationAktiv;
+    int geschwindigkeitSimulation = 1;
+
+    private int _lebenspunkte = 10000;
+    private int _ausdauer = 10000;
+    private int _wasser = 10000;
+    private int _nahrung = 10000;
+
+
+    private int Lebenspunkte
+    {
+        get => _lebenspunkte;
+        set
+        {
+            _lebenspunkte = value;
+            StateHasChanged();
+        }
+    }
+
+    private int Ausdauer
+    {
+        get => _ausdauer;
+        set
+        {
+            _ausdauer = value;
+            StateHasChanged();
+        }
+    }
+
+    private int Wasser
+    {
+        get => _wasser;
+        set
+        {
+            _wasser = value;
+            StateHasChanged();
+        }
+    }
+
+    private int Nahrung
+    {
+        get => _nahrung;
+        set
+        {
+            _nahrung = value;
+            StateHasChanged();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    private async Task Simulation()
+    {
+        //Aktivieren / deaktivieren
+        _simulationAktiv = !_simulationAktiv;
+
+        while (_simulationAktiv)
+        {
+            //Lebenspunkte -= 5; //Nur, wenn Grund vorhanden
+            //Ausdauer -= 0; //Abhängig vom Status "Rennen"
+            Wasser -= 10;
+            Nahrung -= 5;
+
+
+            await Verzögerung(1);
+        }
+    }
+
+    private async Task Verzögerung(int sekunden)
+    {
+        await Task.Delay(sekunden * 1000 / geschwindigkeitSimulation);
+    }
+
+}
+
+<style>
+</style>
+
+
+<!-- Archiv -->
+<!-- #region Threading über den Setter -->
+@*<p>Aktueller Thread: @LastThreadId</p>
+
+    @code {
+        private int _test = 100;
+        private int LastThreadId { get; set; }
+
+        private int Test
+        {
+            get => _test;
+            set
+            {
+                _test = value;
+                LastThreadId = Thread.CurrentThread.ManagedThreadId;
+                StateHasChanged();
+            }
+        }
+    }*@
+
+<!-- #endregion -->

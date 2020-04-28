@@ -1,52 +1,213 @@
 ﻿@page "/KI_Simulator"
+@using System;
 @using System.Threading
-
-<h1>Simulation Dorfbewohner</h1>
-<p>Aktuelle Geschwindigkeit: @geschwindigkeitSimulation</p>
-<br />
-<br />
-
-<p>Aktuelle Lebenspunkte: @Lebenspunkte</p>
-@*<button class="btn btn-primary" @onclick="setzeLebenspunkteZurück">setzeLebenspunkteZurück</button>*@
-<br />
-
-<p>Aktuelle Ausdauer: @Ausdauer</p>
-@*<button class="btn btn-primary" @onclick="setzeAusdauerpunkteZurück">setzeAusdauerpunkteZurück</button>*@
-<br />
-
-<p>Aktuelles Wasser: @Wasser</p>
-@*<button class="btn btn-primary" @onclick="setzeWasserZurück">setzeWasserZurück</button>*@
-<br />
-
-<p>Aktuelle Nahrung: @Nahrung</p>
-@*<button class="btn btn-primary" @onclick="setzeNahrungZurück">setzeNahrungZurück</button>*@
-
+@using System.Collections.Generic;
 
 
 @*<input id="geschwindigkeit" type="number" @bind="geschwindigkeitSimulation" />*@ @*Geschwindigkeit der Simulation*@
-<br />
+<!doctype html>
+<html lang="de">
+<body>
+    <div class="w-75 float-left">
 
-<button class="btn btn-primary" @onclick="Simulation">Starte Simulation</button>
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col">
+                    <h1>Simulation Dorfbewohner</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col">
+                    <span>Aktuelle Geschwindigkeit: @geschwindigkeitSimulation</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="Simulation">Starte Simulation</button>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col">
+                    <p>Aktuelle Lebenspunkte: @Lebenspunkte</p>
+                </div>
+                <div class="col">
+                    <p>Aktuelle Ausdauer: @Ausdauer</p>
+                </div>
+                <div class="col">
+                    <p>Aktuelles Wasser: @Wasser</p>
+                </div>
+                <div class="col">
+                    <p>Aktuelle Nahrung: @Nahrung</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-1">
+                <div class="col">
+
+                </div>
+                <div class="col">
+
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="@(e => ErhöheWasser(100))">Erhöhe Wasser</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="@(e => ErhöheNahrung(100))">Erhöhe Nahrung</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-1">
+                <div class="col">
+
+                </div>
+                <div class="col">
+
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="@(e => ReduziereWasser(100))">Reduziere Wasser</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="@(e => ReduziereNahrung(100))">Reduziere Nahrung</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-25 h-auto float-left mt-5 border">
+        <div class="row mb-1">
+            <ul>
+                @foreach (var item in VerlaufHystorienListe)
+                {
+                    <li>
+                        <p>@item</p>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
+
+@code {
+
+    //public Queue<string> VerlaufHystorie {
+    //    get { return null; }
+    //    set { VerlaufHystorie = value; }
+    //}
+
+
+    //ToDo: lernen
+    //[Parameter]
+    //public EventCallback<int> ExterneMethode { get; set; }
+
+
+
+    private List<string> _VerlaufHystorienListe;
+
+    public List<string> VerlaufHystorienListe
+    {
+        get
+        {
+            if (_VerlaufHystorienListe == null)
+            {
+                _VerlaufHystorienListe = new List<string>();
+                _VerlaufHystorienListe = erstelleHystorie();
+            }
+            return _VerlaufHystorienListe;
+        }
+        set
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (!(value.Count > 0))
+            {
+                VerlaufHystorienListe = erstelleHystorie();
+            }
+
+            _VerlaufHystorienListe = value;
+
+            StateHasChanged();
+        }
+    }
+
+    public List<string> erstelleHystorie()
+    {
+        //Queue<string> verlaufHystorie = new Queue<string>();
+        //verlaufHystorie.Enqueue("Text 1");
+        //verlaufHystorie.Enqueue("Text 2");
+        //verlaufHystorie.Enqueue("Text 3");
+
+
+        List<string> verlaufHystorienListe = new List<string>();
+        verlaufHystorienListe.Add("Text 1 aus der normalen Liste");
+        verlaufHystorienListe.Add("Text 2 aus der normalen Liste");
+        verlaufHystorienListe.Add("Text 3 aus der normalen Liste");
+
+        return verlaufHystorienListe;
+    }
+
+    public void löscheAnzahlLetzterEinträge(int maximalEinträge)
+    {
+        while (maximalEinträge < _VerlaufHystorienListe.Count + 1)
+        {
+            _VerlaufHystorienListe.RemoveAt(_VerlaufHystorienListe.Count + 1);
+        }
+    }
+
+    void aktualisiereHystorie(string nachricht)
+    {
+
+    }
+}
 
 
 @code {
     private bool _simulationAktiv;
+
     int geschwindigkeitSimulation = 1;
 
-    private int _lebenspunkte = 10000;
-    private int _ausdauer = 10000;
-    private int _wasser = 10000;
-    private int _nahrung = 10000;
+    #region Private Felder
 
+    private int _lebenspunkte = 1000;
+    private int _ausdauer = 100;
+    private int _wasser = 1000;
+    private int _nahrung = 1000;
+
+    #endregion
+
+
+    #region Properties
 
     private int Lebenspunkte
     {
         get => _lebenspunkte;
         set
         {
+            if (value <= 0)
+            {
+                _lebenspunkte = 0;
+                charakterGestorben();
+            }
             _lebenspunkte = value;
             StateHasChanged();
+
+            //interne funktion für buisess logik
         }
+    }
+
+    void charakterGestorben()
+    {
+        //ToDo: charakterGestorben()
     }
 
     private int Ausdauer
@@ -79,13 +240,7 @@
         }
     }
 
-
-
-
-
-
-
-
+    #endregion
 
 
     private async Task Simulation()
@@ -100,10 +255,59 @@
             Wasser -= 10;
             Nahrung -= 5;
 
+            if (!PrüfeNahrung(Nahrung)) { VerlaufHystorienListe.Add("Nahrung auf 80%"); }
+            if (!PrüfeWasser(Wasser)) { VerlaufHystorienListe.Add("Wasser auf 80%"); }
 
             await Verzögerung(1);
         }
     }
+
+    //ToDo: void FrageGrundwerteAb(Grundwerte Model)
+
+    private bool PrüfeNahrung(int nahrung)
+    {
+        if (nahrung >= 800)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool PrüfeWasser(int wasser)
+    {
+        if (wasser >= 800)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void ReduziereNahrung()
+    {
+        Nahrung -= 100;
+    }
+    private void ReduziereNahrung(int menge)
+    {
+        if (menge == 0) { menge = 100; }
+        Nahrung -= menge;
+    }
+    private void ReduziereWasser(int menge)
+    {
+        if (menge == 0) { menge = 100; }
+        Wasser -= menge;
+    }
+
+    private void ErhöheNahrung(int menge)
+    {
+        if (menge == 0) { menge = 100; }
+        Nahrung += menge;
+    }
+    private void ErhöheWasser(int menge)
+    {
+        if (menge == 0) { menge = 100; }
+        Wasser += menge;
+    }
+
 
     private async Task Verzögerung(int sekunden)
     {

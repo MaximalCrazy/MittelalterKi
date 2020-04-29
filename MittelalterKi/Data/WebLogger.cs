@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 
-namespace MittelalterKi.Data.StateMachine
+namespace MittelalterKi.Data
 {
     public class WebLogger<T> : ILogger<T>
     {
         private readonly Action<WebLoggerEintrag> logAction;
 
         public WebLogger(Action<WebLoggerEintrag> logAction)
-            {
+        {
             this.logAction = logAction;
         }
 
@@ -36,21 +36,6 @@ namespace MittelalterKi.Data.StateMachine
             {
                 logAction(new WebLoggerEintrag(logLevel.ToString(), $"{eventId}: {state}"));
             }
-        }
-    }
-
-    public class WebLoggerEintrag
-    {
-        private static ulong sNr = 0;
-        public readonly ulong Nr;
-        public readonly string LogLevel;
-        public readonly string Msg;
-
-        public WebLoggerEintrag(string logLevel, string msg)
-        {
-            Nr = sNr++;
-            LogLevel = logLevel;
-            Msg = msg;
         }
     }
 }

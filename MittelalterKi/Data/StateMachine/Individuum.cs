@@ -13,6 +13,8 @@ namespace MittelalterKi.Data.StateMachine
 
         public string Name { get; set; }
 
+        public string Handlung { get => state.GetType().Name; }
+
         public List<string> Zustände { get; } = new List<string>();
 
         public IReadOnlyList<IBedürfnis> Bedürfnise => (IReadOnlyList<IBedürfnis>)bedürfnise;

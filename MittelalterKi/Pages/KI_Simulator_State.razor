@@ -2,6 +2,7 @@
 @using System;
 @using System.Threading
 @using System.Collections.Generic;
+@using MittelalterKi.Data;
 @using MittelalterKi.Data.StateMachine;
 
 
@@ -35,62 +36,75 @@
         <div class="container">
             @foreach (var individuum in individuen)
             {
-            <div class="row mb-1">
-                <div class="col">
-                    <p>@individuum.Name:</p>
-                </div>
-                @foreach (var bedürfnis in individuum.Bedürfnise)
-                {
+                <div class="row mb-1">
                     <div class="col">
-                        <p>@bedürfnis.Name: @bedürfnis.Wert (@bedürfnis.Min/@bedürfnis.Max)</p>
+                        <p>@individuum.Name:</p>
+                        <p>@individuum.Handlung</p>
                     </div>
-                }
-            </div>
+                    @foreach (var bedürfnis in individuum.Bedürfnise)
+                    {
+                        <div class="col">
+                            <p>@bedürfnis.Name: @bedürfnis.Wert</p>
+                            <p>(@bedürfnis.Min/@bedürfnis.Max)</p>
+                        </div>
+                    }
+                </div>
             }
         </div>
     </div>
 
     <style>
-        li.Trace{
-            font-size:0.5em;
+        li.Trace {
+            font-size: 0.5em;
             color: lightgray;
         }
-        li.Trace > *{
-            color: lightgray;
-        }
+
+            li.Trace > * {
+                color: lightgray;
+            }
+
         li.Debug {
-            font-size:0.6em;
+            font-size: 0.6em;
         }
-        li.Debug > *{
-        }
+
+            li.Debug > * {
+            }
+
         li.Information {
-            font-size:0.7em;
-            color:blue;
+            font-size: 0.7em;
+            color: blue;
         }
-        li.Information > *{
-            color:blue;
-        }
+
+            li.Information > * {
+                color: blue;
+            }
+
         li.Warning {
-            font-size:1em;
-            background-color:yellow;
+            font-size: 1em;
+            background-color: yellow;
         }
-        li.Warning > *{
-            background-color:yellow;
-        }
+
+            li.Warning > * {
+                background-color: yellow;
+            }
+
         li.Error {
-            font-size:1em;
-            background-color:red
+            font-size: 1em;
+            background-color: red
         }
-        li.Error > *{
-            background-color:red
+
+            li.Error > * {
+                background-color: red
+            }
+
+        li.Critical {
+            font-size: 1.5em;
+            background-color: yellow;
+            color: purple;
         }
-        li.Critical{
-            font-size:1.5em;
-            background-color:yellow;
-            color:purple;
-        }
-        li.Critical{
-            color:purple;
+
+        li.Critical {
+            color: purple;
         }
     </style>
     <div class="w-25 h-auto float-left mt-5 border">
@@ -113,7 +127,7 @@
 
     public List<Individuum> individuen = new List<Individuum>();
 
-    public WebLogger<BauerPoC> Logger;
+    public WebLogger<EinIndividuum> Logger;
     public void AddLog(WebLoggerEintrag logText)
     {
         _VerlaufHystorienListe.Insert(0, logText);
@@ -169,10 +183,10 @@
 
     protected override void OnInitialized()
     {
-        Logger = new WebLogger<BauerPoC>(s => AddLog(s));
-        individuen.Add(new BauerPoC(Logger, null));
-        individuen.Add(new BauerPoC(Logger, null));
-        individuen.Add(new BauerPoC(Logger, null));
+        Logger = new WebLogger<EinIndividuum>(s => AddLog(s));
+        individuen.Add(new EinIndividuum(Logger, null));
+        individuen.Add(new EinIndividuum(Logger, null));
+        individuen.Add(new EinIndividuum(Logger, null));
         StateHasChanged();
     }
 }

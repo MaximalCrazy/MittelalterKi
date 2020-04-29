@@ -1,0 +1,178 @@
+﻿@page "/KI_Simulator_State"
+@using System;
+@using System.Threading
+@using System.Collections.Generic;
+@using MittelalterKi.Data.StateMachine;
+
+
+@*<input id="geschwindigkeit" type="number" @bind="geschwindigkeitSimulation" />*@ @*Geschwindigkeit der Simulation*@
+<!doctype html>
+<html lang="de">
+<body>
+    <div class="w-75 float-left">
+
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col">
+                    <h1>Simulation Dorfbewohner StateMachine</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col">
+                    <span>Aktuelle Geschwindigkeit: @geschwindigkeitSimulation</span>
+                    <span>Aktuelles MinLogLevel: @Logger.MinLogLevel</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="Simulation">Starte Simulation</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            @foreach (var individuum in individuen)
+            {
+            <div class="row mb-1">
+                <div class="col">
+                    <p>@individuum.Name:</p>
+                </div>
+                @foreach (var bedürfnis in individuum.Bedürfnise)
+                {
+                    <div class="col">
+                        <p>@bedürfnis.Name: @bedürfnis.Wert (@bedürfnis.Min/@bedürfnis.Max)</p>
+                    </div>
+                }
+            </div>
+            }
+        </div>
+    </div>
+
+    <style>
+        li.Trace{
+            font-size:0.5em;
+            color: lightgray;
+        }
+        li.Trace > *{
+            color: lightgray;
+        }
+        li.Debug {
+            font-size:0.6em;
+        }
+        li.Debug > *{
+        }
+        li.Information {
+            font-size:0.7em;
+            color:blue;
+        }
+        li.Information > *{
+            color:blue;
+        }
+        li.Warning {
+            font-size:1em;
+            background-color:yellow;
+        }
+        li.Warning > *{
+            background-color:yellow;
+        }
+        li.Error {
+            font-size:1em;
+            background-color:red
+        }
+        li.Error > *{
+            background-color:red
+        }
+        li.Critical{
+            font-size:1.5em;
+            background-color:yellow;
+            color:purple;
+        }
+        li.Critical{
+            color:purple;
+        }
+    </style>
+    <div class="w-25 h-auto float-left mt-5 border">
+        <div class="row mb-1">
+            <ul>
+                @foreach (var item in VerlaufHystorienListe)
+                {
+                    <li class="@item.LogLevel">
+                        <p>@item.Nr: @item.Msg</p>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
+
+@code {
+
+    public List<Individuum> individuen = new List<Individuum>();
+
+    public WebLogger<BauerPoC> Logger;
+    public void AddLog(WebLoggerEintrag logText)
+    {
+        _VerlaufHystorienListe.Insert(0, logText);
+        löscheAnzahlLetzterEinträge(100);
+        StateHasChanged();
+    }
+
+    private List<WebLoggerEintrag> _VerlaufHystorienListe = new List<WebLoggerEintrag>();
+
+    public List<WebLoggerEintrag> VerlaufHystorienListe
+    {
+        get
+        {
+            return _VerlaufHystorienListe;
+        }
+    }
+
+    public void löscheAnzahlLetzterEinträge(int maximalEinträge)
+    {
+        while (maximalEinträge < _VerlaufHystorienListe.Count + 1)
+        {
+            _VerlaufHystorienListe.RemoveAt(_VerlaufHystorienListe.Count - 1);
+        }
+    }
+
+    private bool _simulationAktiv;
+
+    int geschwindigkeitSimulation = 10;
+
+
+    private async Task Simulation()
+    {
+        //Aktivieren / deaktivieren
+        _simulationAktiv = !_simulationAktiv;
+
+        while (_simulationAktiv)
+        {
+            foreach (var i in individuen)
+            {
+                await i.BerechneNächstenZustand(1);
+            }
+            StateHasChanged();
+
+            await Verzögerung(1);
+        }
+    }
+
+
+    private async Task Verzögerung(int sekunden)
+    {
+        await Task.Delay(sekunden * 1000 / geschwindigkeitSimulation);
+    }
+
+    protected override void OnInitialized()
+    {
+        Logger = new WebLogger<BauerPoC>(s => AddLog(s));
+        individuen.Add(new BauerPoC(Logger, null));
+        individuen.Add(new BauerPoC(Logger, null));
+        individuen.Add(new BauerPoC(Logger, null));
+        StateHasChanged();
+    }
+}

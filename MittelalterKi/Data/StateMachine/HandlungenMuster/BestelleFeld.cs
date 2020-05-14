@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MittelalterKi.Data.StateMachine.Handlungen
+namespace MittelalterKi.Data.StateMachine.HandlungenMuster
 {
-    public class Warte : IndividuumsBasisHandlung
+    public class BestelleFeld : IndividuumsBasisSubHandlung
     {
         private static readonly System.Random rnd = new System.Random();
 
-        public Warte(Individuum individuum, ILogger logger) : base(individuum, logger) { }
+        public BestelleFeld(Individuum individuum, IHandlung vorherigeAktion, ILogger logger) : base(individuum, vorherigeAktion, logger) { }
 
 #pragma warning disable CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt. Ist einen enfache implementierung ohne asyncrone Vorgänge
         public override async Task<IHandlung> BerechneNächste(decimal zeitEinheiten = 1)
@@ -24,24 +24,25 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             {
                 return new Essen(individuum, this, logger);
             }
+
             var energi = individuum.Bedürfnise.FirstOrDefault(b => b.Name == "Energi");
-            var narung = individuum.Bedürfnise.FirstOrDefault(b => b.Name == "Narung");
-            if (energi != null && energi.Wert < energi.Max)
+            var narungsLager = individuum.Bedürfnise.FirstOrDefault(b => b.Name == "NarungsLager");
+
+            if (energi == null
+             || narungsLager == null
+             || energi.Wert <= 0
+             || energi.Wert < 30 && narungsLager.Wert < narungsLager.Min
+             || narungsLager.Wert >= narungsLager.Max)
             {
-                energi.Wert += rnd.Next(0, (int)(narung.Wert/10));
-                if (energi.Wert > energi.Max)
-                {
-                    energi.Max = energi.Wert;
-                }
+                return vorherigeAktion;
             }
 
-            var narungsLager = individuum.Bedürfnise.FirstOrDefault(b => b.Name == "NarungsLager");
-            if (narungsLager != null)
+            narungsLager.Wert += rnd.Next(0, 10);
+            energi.Wert -= rnd.Next(1, 3);
+            if (narungsLager.Wert >= narungsLager.Max)
             {
-                if (rnd.Next(0, (int)(narungsLager.Wert / 10)) < 2)
-                {
-                    return new BestelleFeld(individuum, this, logger);
-                }
+                narungsLager.Wert = narungsLager.Max;
+                return vorherigeAktion;
             }
 
             return this;

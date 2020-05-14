@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using MittelalterKi.Data.StateMachine.Bedürfnise;
+using MittelalterKi.Data.StateMachine.Bedürfnis;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MittelalterKi.Data.StateMachine.Handlungen
+namespace MittelalterKi.Data.StateMachine.HandlungenMuster
 {
     public abstract class IndividuumsBasisHandlung : IHandlung
     {

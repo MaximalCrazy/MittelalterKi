@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MittelalterKi.Data.StateMachine.Handlungen
+namespace MittelalterKi.Data.StateMachine.HandlungenMuster
 {
     internal class Essen : IndividuumsBasisSubHandlung
     {
@@ -20,7 +20,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
             var narungsLager = individuum.Bedürfnise.FirstOrDefault(b => b.Name == "NarungsLager");
             if (narung != null)
             {
-                if (narungsLager != null 
+                if (narungsLager != null
                  && narungsLager.Wert > 0)
                 {
                     var braucht = narung.Max - narung.Wert + 1;
@@ -31,7 +31,7 @@ namespace MittelalterKi.Data.StateMachine.Handlungen
                 else
                 {
                     //Beim Essen wird Narung mehr aufgefüllt als "normalerweise" gesenkt
-                    narung.Wert = narung.Wert + (zeitEinheiten * 1.5M);
+                    narung.Wert = narung.Wert + zeitEinheiten * 1.5M;
                 }
 
             }

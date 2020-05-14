@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace MittelalterKi.Data.StateMachine.Handlungen
+namespace MittelalterKi.Data.StateMachine.HandlungenMuster
 {
     public interface IHandlung
     {

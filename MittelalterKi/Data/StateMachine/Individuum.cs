@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using MittelalterKi.Data.StateMachine.Bedürfnis;
+using MittelalterKi.Data.StateMachine.Bedürfnisse;
 using MittelalterKi.Data.StateMachine.HandlungenMuster;
 using System.Collections.Generic;
 using System.Threading.Tasks;

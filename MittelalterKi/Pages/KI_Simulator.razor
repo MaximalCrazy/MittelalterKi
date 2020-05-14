@@ -4,6 +4,7 @@
 @using System.Collections.Generic;
 
 
+
 @*<input id="geschwindigkeit" type="number" @bind="geschwindigkeitSimulation" />*@ @*Geschwindigkeit der Simulation*@
 <!doctype html>
 <html lang="de">
@@ -22,6 +23,7 @@
             <div class="row mb-2">
                 <div class="col">
                     <span>Aktuelle Geschwindigkeit: @geschwindigkeitSimulation</span>
+                    @*<span>Aktuelles MinLogLevel: @Logger.MinLogLevel</span>*@
                 </div>
             </div>
             <div class="row mb-3">
@@ -88,6 +90,10 @@
                     <li>
                         <p>@item</p>
                     </li>
+
+                    @*<li class="@item.LogLevel">
+                        <p>@item.Nr: @item.Msg</p>
+                    </li>*@
                 }
             </ul>
         </div>
@@ -108,7 +114,7 @@
     //[Parameter]
     //public EventCallback<int> ExterneMethode { get; set; }
 
-
+    int anzahlVerlaufsElemente = 20;
 
     private List<string> _VerlaufHystorienListe;
 
@@ -149,24 +155,28 @@
 
 
         List<string> verlaufHystorienListe = new List<string>();
-        verlaufHystorienListe.Add("Text 1 aus der normalen Liste");
-        verlaufHystorienListe.Add("Text 2 aus der normalen Liste");
-        verlaufHystorienListe.Add("Text 3 aus der normalen Liste");
+        //verlaufHystorienListe.Add("Text 1 aus der normalen Liste");
+        //verlaufHystorienListe.Add("Text 2 aus der normalen Liste");
+        //verlaufHystorienListe.Add("Text 3 aus der normalen Liste");
 
         return verlaufHystorienListe;
     }
 
     public void löscheAnzahlLetzterEinträge(int maximalEinträge)
     {
-        while (maximalEinträge < _VerlaufHystorienListe.Count + 1)
+        while (maximalEinträge <= _VerlaufHystorienListe.Count +1)
         {
-            _VerlaufHystorienListe.RemoveAt(_VerlaufHystorienListe.Count + 1);
+            _VerlaufHystorienListe.RemoveAt(0);
         }
     }
 
     void aktualisiereHystorie(string nachricht)
     {
-
+        _VerlaufHystorienListe.Add(nachricht);
+        if (_VerlaufHystorienListe.Count > anzahlVerlaufsElemente)
+        {
+            löscheAnzahlLetzterEinträge(anzahlVerlaufsElemente);
+        }
     }
 }
 
@@ -182,6 +192,9 @@
     private int _ausdauer = 100;
     private int _wasser = 1000;
     private int _nahrung = 1000;
+    private bool _verdursten;
+    private bool _verhungern;
+    private bool _erschöpft;
 
     #endregion
 
@@ -201,13 +214,18 @@
             _lebenspunkte = value;
             StateHasChanged();
 
-            //interne funktion für buisess logik
+            //interne funktion für BL
         }
     }
 
     void charakterGestorben()
     {
         //ToDo: charakterGestorben()
+
+        aktualisiereHystorie("Spieler Gestorben");
+
+        //Macht nur bei einem Spieler zum testen Sinn.
+        _simulationAktiv = false;
     }
 
     private int Ausdauer
@@ -215,7 +233,26 @@
         get => _ausdauer;
         set
         {
-            _ausdauer = value;
+            if (value <= 0)
+            {
+                if (!_erschöpft)
+                {
+                    aktualisiereHystorie("Spieler erschöpft!");
+                }
+                _erschöpft = true;
+                _ausdauer = 0;
+            }
+            else if (_erschöpft && value > 0)
+            {
+                aktualisiereHystorie("Spieler nicht mehr erschöpft.");
+                _ausdauer = value;
+                _erschöpft = false;
+            }
+            else
+            {
+                _ausdauer = value;
+                _erschöpft = false;
+            }
             StateHasChanged();
         }
     }
@@ -225,7 +262,26 @@
         get => _wasser;
         set
         {
-            _wasser = value;
+            if (value <= 0)
+            {
+                if (!_verdursten)
+                {
+                    aktualisiereHystorie("Spieler am verdursten!");
+                }
+                _verdursten = true;
+                _wasser = 0;
+            }
+            else if (_verdursten && value > 0)
+            {
+                aktualisiereHystorie("Spieler nicht mehr am verdursten.");
+                _verdursten = false;
+                _wasser = value;
+            }
+            else
+            {
+                _verdursten = false;
+                _wasser = value;
+            }
             StateHasChanged();
         }
     }
@@ -235,7 +291,26 @@
         get => _nahrung;
         set
         {
-            _nahrung = value;
+            if (value <= 0)
+            {
+                if (!_verhungern)
+                {
+                    aktualisiereHystorie("Spieler am verhungern!");
+                }
+                _verhungern = true;
+                _nahrung = 0;
+            }
+            else if (_verhungern && value > 0)
+            {
+                aktualisiereHystorie("Spieler nicht mehr am verhungern.");
+                _verhungern = false;
+                _nahrung = value;
+            }
+            else
+            {
+                _verhungern = false;
+                _nahrung = value;
+            }
             StateHasChanged();
         }
     }
@@ -255,14 +330,18 @@
             Wasser -= 10;
             Nahrung -= 5;
 
-            if (!PrüfeNahrung(Nahrung)) { VerlaufHystorienListe.Add("Nahrung auf 80%"); }
-            if (!PrüfeWasser(Wasser)) { VerlaufHystorienListe.Add("Wasser auf 80%"); }
+            //if (!PrüfeNahrung(Nahrung)) { VerlaufHystorienListe.Add("Nahrung auf 80%"); }
+            //if (!PrüfeWasser(Wasser)) { VerlaufHystorienListe.Add("Wasser auf 80%"); }
 
             await Verzögerung(1);
+
+            //statemaschine.doTick()
         }
     }
 
     //ToDo: void FrageGrundwerteAb(Grundwerte Model)
+
+
 
     private bool PrüfeNahrung(int nahrung)
     {
@@ -285,27 +364,33 @@
     private void ReduziereNahrung()
     {
         Nahrung -= 100;
+        aktualisiereHystorie("Nahrung um: 100 manuel reduziert");
     }
     private void ReduziereNahrung(int menge)
     {
         if (menge == 0) { menge = 100; }
         Nahrung -= menge;
+        aktualisiereHystorie("Nahrung um: 100 manuel reduziert");
     }
     private void ReduziereWasser(int menge)
     {
         if (menge == 0) { menge = 100; }
         Wasser -= menge;
+        aktualisiereHystorie("Wasser um: 100 manuel reduziert");
     }
 
     private void ErhöheNahrung(int menge)
     {
         if (menge == 0) { menge = 100; }
         Nahrung += menge;
+        aktualisiereHystorie("Nahrung um: 100 manuel erhöht");
     }
     private void ErhöheWasser(int menge)
     {
         if (menge == 0) { menge = 100; }
         Wasser += menge;
+
+        aktualisiereHystorie("Wasser um: 100 manuel erhöht");
     }
 
 

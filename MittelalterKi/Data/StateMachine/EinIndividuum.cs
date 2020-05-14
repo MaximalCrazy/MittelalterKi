@@ -14,10 +14,10 @@ namespace MittelalterKi.Data.StateMachine
         {
             Name = $"{nameof(EinIndividuum)} Nr.: {Id}";
             this.fähigkeitenQuelle = fähigkeitenQuelle;
-            bedürfnise.Add(new Bedürfnis("Narung", rnd.Next(10, 100)));
-            bedürfnise.Add(new Bedürfnis("Wasser", rnd.Next(20, 80)));
-            bedürfnise.Add(new Bedürfnis("NarungsLager", rnd.Next(0, 500)) { Min = 50, Max = 1000 });
-            bedürfnise.Add(new Bedürfnis("Energi", rnd.Next(0, 100)) { Min = 0, Max = 100 });
+            //bedürfnise.Add(new Bedürfnis("Narung", rnd.Next(10, 100)));
+            //bedürfnise.Add(new Bedürfnis("Wasser", rnd.Next(20, 80)));
+            //bedürfnise.Add(new Bedürfnis("NarungsLager", rnd.Next(0, 500)) { Min = 50, Max = 1000 });
+            //bedürfnise.Add(new Bedürfnis("Energi", rnd.Next(0, 100)) { Min = 0, Max = 100 });
 
             state = new Warte(this, logger);
         }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using MittelalterKi.Data.StateMachine.Bedürfnise;
 using MittelalterKi.Data.StateMachine.Fähigkeiten;
-using MittelalterKi.Data.StateMachine.Handlungen;
+using MittelalterKi.Data.StateMachine.HandlungenMuster;
 
 namespace MittelalterKi.Data.StateMachine
 {

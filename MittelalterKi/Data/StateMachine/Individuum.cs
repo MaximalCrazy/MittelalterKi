@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using MittelalterKi.Data.StateMachine.Bedürfnise;
-using MittelalterKi.Data.StateMachine.Handlungen;
+using MittelalterKi.Data.StateMachine.Bedürfnis;
+using MittelalterKi.Data.StateMachine.HandlungenMuster;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

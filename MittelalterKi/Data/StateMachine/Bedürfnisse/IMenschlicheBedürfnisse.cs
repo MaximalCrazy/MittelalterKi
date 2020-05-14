@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MittelalterKi.Data.StateMachine.Bedürfnis
+﻿namespace MittelalterKi.Data.StateMachine.Bedürfnis
 {
 
     /*    
@@ -35,7 +29,7 @@ namespace MittelalterKi.Data.StateMachine.Bedürfnis
         Leitsatz: "Eine Grenze zur Begierde ist nicht vorhanden."
     */
 
-    interface IMenschlicheBedürfnisse
+    public interface IMenschlicheBedürfnisse
     {
         Existenzbedürfnisse Existenzbedürfnisse { get; set; }
         Grundbedürfnisse Grundbedürfnisse { get; set; }

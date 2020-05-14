@@ -6,10 +6,12 @@
             Name = name;
             Wert = staertWert;
         }
+        public string Name { get; }
         public decimal Wert { get; set; }
+
         public decimal Min { get; set; } = 10;
         public decimal Max { get; set; } = 100;
+        public decimal Qualität { get; set; }
 
-        public string Name { get; }
     }
 }

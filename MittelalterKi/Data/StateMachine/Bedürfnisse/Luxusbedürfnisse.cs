@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MittelalterKi.Data.StateMachine.Bedürfnis
+namespace MittelalterKi.Data.StateMachine.Bedürfnisse
 {
     public class Luxusbedürfnisse : ILuxusbedürfnisse
     {

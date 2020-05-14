@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace MittelalterKi.Data.StateMachine.Bedürfnis
+namespace MittelalterKi.Data.StateMachine.Bedürfnisse
 {
     public class MenschlicheBedürfnisse : IMenschlicheBedürfnisse
     {
-        public Existenzbedürfnisse Existenzbedürfnisse { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Grundbedürfnisse Grundbedürfnisse { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Kulturbedürfnisse Kulturbedürfnisse { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Luxusbedürfnisse ILuxusbedürfnisse { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Existenzbedürfnisse Existenzbedürfnisse { get; set; }
+        public Grundbedürfnisse Grundbedürfnisse { get; set; }
+        public Kulturbedürfnisse Kulturbedürfnisse { get; set; }
+        public Luxusbedürfnisse ILuxusbedürfnisse { get; set; }
     }
 }

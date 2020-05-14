@@ -1,4 +1,4 @@
-﻿namespace MittelalterKi.Data.StateMachine.Bedürfnis
+﻿namespace MittelalterKi.Data.StateMachine.Bedürfnisse
 {
     public interface IBedürfnis
     {
@@ -7,7 +7,7 @@
 
         decimal Min { get; set; }
         decimal Max { get; set; }
-        public decimal Qualität { get; set; }
+        decimal Qualität { get; set; }
 
     }
 }

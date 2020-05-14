@@ -1,4 +1,4 @@
-﻿namespace MittelalterKi.Data.StateMachine.Bedürfnis
+﻿namespace MittelalterKi.Data.StateMachine.Bedürfnisse
 {
     public class Existenzbedürfnisse : IExistenzbedürfnisse
     {

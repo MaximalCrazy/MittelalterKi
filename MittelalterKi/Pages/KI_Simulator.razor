@@ -85,7 +85,7 @@
     <div class="w-25 h-auto float-left mt-5 border">
         <div class="row mb-1">
             <ul>
-                @foreach (var item in VerlaufHystorienListe)
+                @foreach (var item in VerlaufHystorienQueue)
                 {
                     <li>
                         <p>@item</p>
@@ -116,17 +116,17 @@
 
     int anzahlVerlaufsElemente = 20;
 
-    private Queue<string> _VerlaufHystorienListe;
+    private Queue<string> _VerlaufHystorienQueue;
 
-    public Queue<string> VerlaufHystorienListe
+    public Queue<string> VerlaufHystorienQueue
     {
         get
         {
-            if (_VerlaufHystorienListe == null)
+            if (_VerlaufHystorienQueue == null)
             {
-                _VerlaufHystorienListe = erstelleHystorie();
+                _VerlaufHystorienQueue = erstelleHystorie();
             }
-            return _VerlaufHystorienListe;
+            return _VerlaufHystorienQueue;
         }
         set
         {
@@ -136,10 +136,10 @@
             }
             if (!(value.Count > 0))
             {
-                VerlaufHystorienListe = erstelleHystorie();
+                VerlaufHystorienQueue = erstelleHystorie();
             }
 
-            _VerlaufHystorienListe = value;
+            _VerlaufHystorienQueue = value;
 
             StateHasChanged();
         }
@@ -157,16 +157,16 @@
 
     public void löscheAnzahlLetzterEinträge(int maximalEinträge)
     {
-        while (maximalEinträge <= _VerlaufHystorienListe.Count +1)
+        while (maximalEinträge <= _VerlaufHystorienQueue.Count +1)
         {
-            _VerlaufHystorienListe.Dequeue();
+            _VerlaufHystorienQueue.Dequeue();
         }
     }
 
     void aktualisiereHystorie(string nachricht)
     {
-        _VerlaufHystorienListe.Enqueue(nachricht);
-        if (_VerlaufHystorienListe.Count > anzahlVerlaufsElemente)
+        _VerlaufHystorienQueue.Enqueue(nachricht);
+        if (_VerlaufHystorienQueue.Count > anzahlVerlaufsElemente)
         {
             löscheAnzahlLetzterEinträge(anzahlVerlaufsElemente);
         }

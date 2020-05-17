@@ -116,15 +116,14 @@
 
     int anzahlVerlaufsElemente = 20;
 
-    private List<string> _VerlaufHystorienListe;
+    private Queue<string> _VerlaufHystorienListe;
 
-    public List<string> VerlaufHystorienListe
+    public Queue<string> VerlaufHystorienListe
     {
         get
         {
             if (_VerlaufHystorienListe == null)
             {
-                _VerlaufHystorienListe = new List<string>();
                 _VerlaufHystorienListe = erstelleHystorie();
             }
             return _VerlaufHystorienListe;
@@ -146,33 +145,27 @@
         }
     }
 
-    public List<string> erstelleHystorie()
+    public Queue<string> erstelleHystorie()
     {
-        //Queue<string> verlaufHystorie = new Queue<string>();
-        //verlaufHystorie.Enqueue("Text 1");
-        //verlaufHystorie.Enqueue("Text 2");
-        //verlaufHystorie.Enqueue("Text 3");
+        Queue<string> verlaufHystorienQueue = new Queue<string>();
+        //verlaufHystorienQueue.Enqueue("Text 1");
+        //verlaufHystorienQueue.Enqueue("Text 2");
+        //verlaufHystorienQueue.Enqueue("Text 3");
 
-
-        List<string> verlaufHystorienListe = new List<string>();
-        //verlaufHystorienListe.Add("Text 1 aus der normalen Liste");
-        //verlaufHystorienListe.Add("Text 2 aus der normalen Liste");
-        //verlaufHystorienListe.Add("Text 3 aus der normalen Liste");
-
-        return verlaufHystorienListe;
+        return verlaufHystorienQueue;
     }
 
     public void löscheAnzahlLetzterEinträge(int maximalEinträge)
     {
         while (maximalEinträge <= _VerlaufHystorienListe.Count +1)
         {
-            _VerlaufHystorienListe.RemoveAt(0);
+            _VerlaufHystorienListe.Dequeue();
         }
     }
 
     void aktualisiereHystorie(string nachricht)
     {
-        _VerlaufHystorienListe.Add(nachricht);
+        _VerlaufHystorienListe.Enqueue(nachricht);
         if (_VerlaufHystorienListe.Count > anzahlVerlaufsElemente)
         {
             löscheAnzahlLetzterEinträge(anzahlVerlaufsElemente);
@@ -329,10 +322,7 @@
             //Ausdauer -= 0; //Abhängig vom Status "Rennen"
             Wasser -= 10;
             Nahrung -= 5;
-
-            //if (!PrüfeNahrung(Nahrung)) { VerlaufHystorienListe.Add("Nahrung auf 80%"); }
-            //if (!PrüfeWasser(Wasser)) { VerlaufHystorienListe.Add("Wasser auf 80%"); }
-
+                        
             await Verzögerung(1);
 
             //statemaschine.doTick()
@@ -343,41 +333,7 @@
 
 
 
-    private bool PrüfeNahrung(int nahrung)
-    {
-        if (nahrung >= 800)
-        {
-            return true;
-        }
-        return false;
-    }
 
-    private bool PrüfeWasser(int wasser)
-    {
-        if (wasser >= 800)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private void ReduziereNahrung()
-    {
-        Nahrung -= 100;
-        aktualisiereHystorie("Nahrung um: 100 manuel reduziert");
-    }
-    private void ReduziereNahrung(int menge)
-    {
-        if (menge == 0) { menge = 100; }
-        Nahrung -= menge;
-        aktualisiereHystorie("Nahrung um: 100 manuel reduziert");
-    }
-    private void ReduziereWasser(int menge)
-    {
-        if (menge == 0) { menge = 100; }
-        Wasser -= menge;
-        aktualisiereHystorie("Wasser um: 100 manuel reduziert");
-    }
 
     private void ErhöheNahrung(int menge)
     {
@@ -385,12 +341,25 @@
         Nahrung += menge;
         aktualisiereHystorie("Nahrung um: 100 manuel erhöht");
     }
+    private void ReduziereNahrung(int menge)
+    {
+        if (menge == 0) { menge = 100; }
+        Nahrung -= menge;
+        aktualisiereHystorie("Nahrung um: 100 manuel reduziert");
+    }
+
     private void ErhöheWasser(int menge)
     {
         if (menge == 0) { menge = 100; }
         Wasser += menge;
 
         aktualisiereHystorie("Wasser um: 100 manuel erhöht");
+    }
+    private void ReduziereWasser(int menge)
+    {
+        if (menge == 0) { menge = 100; }
+        Wasser -= menge;
+        aktualisiereHystorie("Wasser um: 100 manuel reduziert");
     }
 
 
